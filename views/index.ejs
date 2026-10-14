@@ -2,14 +2,16 @@
 <html>
 <head>
   <title><%= title %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel='stylesheet' href='/stylesheets/style.css' />
+  <script src="/javascripts/customer.js" defer></script>
 </head>
 <body>
 <h1><%= title %></h1>
 <p>Welcome to <%= title %>.   Let's test reading get+post data</p>
 
 <br/><br/>
-<b>New Customer Form </b> to test POST request and reading data using URI  /readNameAndRespond
+<b>Traditional Customer Form </b> to test POST request using URI /readCustomerInfoAndRespond
 <br/>
 <form action="/readCustomerInfoAndRespond" method="post">
 
@@ -19,6 +21,20 @@
   <br/>
   <input type="submit" value="Go"/>
 </form>
+
+<section class="customer-api" aria-labelledby="customer-api-heading">
+  <h2 id="customer-api-heading">Customer Form using REST / JSON</h2>
+  <p>This form uses JavaScript fetch() to call /api/customer and shows the response here without reloading.</p>
+  <form id="customer-api-form" action="/api/customer" method="post">
+    <label for="customer-name">Name</label>
+    <input id="customer-name" name="name" type="text" autocomplete="name" required>
+    <label for="customer-email">Email</label>
+    <input id="customer-email" name="email" type="email" autocomplete="email" required>
+    <button id="customer-submit" type="submit">Submit with fetch</button>
+  </form>
+  <p id="customer-result" role="status" aria-live="polite" aria-atomic="true"></p>
+  <noscript>Enable JavaScript to try the REST form. The traditional forms still work without JavaScript.</noscript>
+</section>
 
 <br><br><br>
 <hr>

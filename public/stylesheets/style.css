@@ -1,8 +1,47 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  overflow-wrap: anywhere;
 }
 
 a {
   color: #00B7FF;
+}
+
+.customer-api {
+  margin-top: 2rem;
+  padding: 1rem;
+  border: 1px solid #aaa;
+  max-width: 38rem;
+}
+
+.customer-api label, .customer-api input {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.customer-api input {
+  box-sizing: border-box;
+  max-width: 100%;
+  width: 22rem;
+}
+
+.customer-api input, .customer-api button {
+  font: inherit;
+  padding: 0.4rem;
+}
+
+#customer-result {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.customer-api button:disabled {
+  cursor: wait;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 20px;
+  }
 }
