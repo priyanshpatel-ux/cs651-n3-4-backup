@@ -75,4 +75,21 @@ router.post('/readCustomerInfoAndRespond', function(req, res, next) {
 
 });
 
+// Keep the traditional routes above for the N3.2 architecture comparison.
+router.post('/api/customer', function(req, res) {
+  if (!req.is('application/json')) {
+    return res.status(415).json({ error: 'Send customer data as application/json.' });
+  }
+
+  var customer = req.body;
+  if (!customer || Array.isArray(customer) ||
+      typeof customer.name !== 'string' || !customer.name.trim() ||
+      typeof customer.email !== 'string' || !customer.email.trim()) {
+    return res.status(400).json({ error: 'Name and email must be non-empty strings.' });
+  }
+
+  // Same greeting as the assignment; only the response representation changes.
+  res.json({ message: 'Welcome ' + customer.name, email: customer.email });
+});
+
 module.exports = router;

@@ -29,6 +29,15 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
+  // JSON parsing happens before the router. Keep parser errors JSON for this
+  // endpoint too, without exposing internals. See docs/decisions/n3-2-customer-api.md.
+  if (/^\/api\/customer\/?$/i.test(req.path)) {
+    var status = err.status || 500;
+    var message = status === 413 ? 'Customer data is too large.' :
+      status === 400 ? 'Send a valid JSON object.' : 'Unable to process customer data.';
+    return res.status(status).json({ error: message });
+  }
+
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
