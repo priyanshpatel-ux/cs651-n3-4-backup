@@ -37,6 +37,9 @@ const askAnythingPrompt = process.env.askAnythingPrompt?.trim();
 // The Gemini model for Ask Anything is also loaded from backend/.env.
 const geminiAskAnythingModel = process.env.geminiAskAnythingModel?.trim() || 'gemini-2.5-flash';
 
+const fallbackAnswer =
+  'Smart Speech Coach is an AI-powered tool that helps users improve public speaking by providing feedback on pacing, filler words, tone, clarity, and pronunciation.';
+
 app.get('/', (request, response) => {
   response.json({ service: 'Smart Speech Coach backend', status: 'ok' });
 });
@@ -96,22 +99,25 @@ User question: ${message}`;
     // Use the stable Gemini generateContent API. It is supported by the
     // @google/genai version locked in package-lock.json and works on both
     // local Node.js and Elastic Beanstalk.
-    const result = await ai.models.generateContent({
-      model: geminiAskAnythingModel,
-      contents: prompt,
-    });
+    const result = await Promise.race([
+      ai.models.generateContent({
+        model: geminiAskAnythingModel,
+        contents: prompt,
+      }),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Gemini request timed out')), 15000),
+      ),
+    ]);
 
     // Send only the final answer text back to the frontend.
     response.json({
       answer: result.text || 'I could not generate an answer right now.',
     });
   } catch (error) {
-    // Log the real error for the developer, but send the user
-    // a simple message that does not expose internal details.
+    // Keep the API usable if Gemini is temporarily unavailable or slow.
+    // The real error is logged for diagnosis, but not exposed to clients.
     console.error('Gemini request failed:', error?.message || error);
-    response.status(500).json({
-      error: 'Smart Speech Coach could not answer right now.',
-    });
+    response.json({ answer: fallbackAnswer, fallback: true });
   }
 });
 

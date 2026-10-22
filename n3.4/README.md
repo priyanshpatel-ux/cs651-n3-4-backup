@@ -46,7 +46,7 @@ Configure these Elastic Beanstalk environment properties. Put the real Gemini ke
 
 ```text
 GEMINI_API_KEY=<current-key>
-geminiAskAnythingModel=gemini-3.8-flash
+geminiAskAnythingModel=gemini-2.5-flash
 askAnythingPrompt=You are going to answer questions about Smart Speech Coach. Keep answers concise and on topic.
 allowedOrigins=http://localhost:5173,https://smartspeechcoach.web.app
 ```
